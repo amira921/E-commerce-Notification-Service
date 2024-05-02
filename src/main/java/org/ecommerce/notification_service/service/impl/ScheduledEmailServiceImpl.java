@@ -40,7 +40,7 @@ public class ScheduledEmailServiceImpl implements ScheduledEmailService {
      *                           In case of failure, the email status is updated to FAILED in database.
      */
     @Async
-    @Scheduled(cron = "0 42 20 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     @Override
     public void resendFailedNotifications() {
         log.info("Scheduled Task started...\nResend Failed Emails...");
