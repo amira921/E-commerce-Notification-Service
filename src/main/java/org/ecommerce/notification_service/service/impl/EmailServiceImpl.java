@@ -94,8 +94,8 @@ public class EmailServiceImpl implements EmailService {
             log.info("record not found with id:" + updatedEmailRecord.getId());
             return;
         }
-        existingRecord.setStatus(updatedEmailRecord.getStatus());
-        existingRecord.setReceived_at(updatedEmailRecord.getReceived_at());
+        existingRecord.setStatus(EmailStatus.SUCCESS);
+        existingRecord.setReceived_at(new Date());
         emailRepository.save(existingRecord);
         log.info("Email Details record updated successfully");
     }
