@@ -3,6 +3,8 @@ package org.ecommerce.notification_service.consumer;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ecommerce.notification_service.dto.EmailDetailsDTO;
+import org.ecommerce.notification_service.entity.EmailDetails;
 import org.ecommerce.notification_service.service.impl.EmailServiceImpl;
 import org.ecommerce.notification_service.util.DataConverter;
 import org.springframework.amqp.core.*;
@@ -26,11 +28,24 @@ public class RabbitMQConsumer implements MessageListener {
      */
     @Override
     public void onMessage(Message message) {
-        log.info(String.format("Message received from RabbitMQ successfully.\nMessage:\nre%s\n" , new String(message.getBody())));
-        JsonNode messageNode = consumerUtil.convertMessageBodyToJsonNode(message);
-        String emailContent = emailService.createEmailContent(messageNode);
+        log.info(String.format("Message received from RabbitMQ successfully.\nMessage:\n%s\n", new String(message.getBody())));
+        if (message.getBody().length > 0) {
+            JsonNode messageNode = consumerUtil.convertMessageBodyToJsonNode(message);
 
-        String customerEmail = messageNode.get("customer").get("email").asText();
-        emailService.sendEmail(customerEmail, emailContent);
+            String customerEmail = messageNode.get("customer").get("email").asText();
+
+            EmailDetailsDTO emailDetailsDTO = new EmailDetailsDTO();
+            emailDetailsDTO.setMessage(messageNode.toString());
+            emailDetailsDTO.setEmailTo(customerEmail);
+            EmailDetails emailDetails = emailService.addEmailInfoToDB(emailDetailsDTO);
+
+            String emailContent = emailService.createEmailContent(messageNode);
+            boolean isSent = emailService.sendEmail(customerEmail, emailContent);
+            if (isSent) emailService.updateEmailDetailsStatus(emailDetails);
+
+            log.info("request end..");
+            return;
+        }
+        log.error("Message received but not valid");
     }
 }

@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.*;
 import lombok.extern.slf4j.Slf4j;
-import org.ecommerce.notification_service.dto.OrderItem;
+import org.ecommerce.notification_service.dto.*;
+import org.ecommerce.notification_service.entity.EmailDetails;
+import org.ecommerce.notification_service.mapper.EmailMapper;
+import org.ecommerce.notification_service.repository.EmailRepository;
 import org.ecommerce.notification_service.service.EmailService;
 import org.ecommerce.notification_service.util.DataConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +16,7 @@ import org.springframework.mail.javamail.*;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import java.util.List;
-
+import java.util.*;
 
 @Service
 @Slf4j
@@ -25,13 +27,17 @@ public class EmailServiceImpl implements EmailService {
     private final TemplateEngine templateEngine;
     private final JavaMailSender mailSender;
     private final DataConverter converter;
+    private final EmailRepository emailRepository;
+    private final EmailMapper emailMapper;
 
-    public EmailServiceImpl(TemplateEngine templateEngine,
-                            JavaMailSender mailSender,
-                            DataConverter converter){
+    public EmailServiceImpl(TemplateEngine templateEngine, JavaMailSender mailSender,
+                            DataConverter converter, EmailRepository repository,
+                            EmailMapper mapper){
         this.converter = converter;
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
+        this.emailRepository = repository;
+        this.emailMapper = mapper;
     }
 
     @Override
@@ -47,12 +53,12 @@ public class EmailServiceImpl implements EmailService {
         List<OrderItem> items = converter.convertJsonNodeToList(node.get("order").get("items"));
         context.setVariable("items", items);
         String emailContent = templateEngine.process("emailTemplate.html", context);
-        log.info(String.format("Message converted from JsonNode to existing email template to be ready for sending."));
+        log.info("Message converted from JsonNode to existing email template to be ready for sending.");
         return emailContent;
     }
 
     @Override
-    public void sendEmail(String to, String content){
+    public boolean sendEmail(String to, String content){
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -62,10 +68,35 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(content, true);
             mailSender.send(message);
             log.info(String.format("Mail send successfully to a customer."));
+            return true;
         } catch (MessagingException e) {
             log.error(e.getMessage());
         }catch(MailSendException e){
             log.error(e.getMessage());
         }
+        return false;
+    }
+
+    @Override
+    public EmailDetails addEmailInfoToDB(EmailDetailsDTO emailDetailsRecord) {
+        emailDetailsRecord.setStatus(EmailStatus.FAILED);
+        emailDetailsRecord.setCreated_at(new Date());
+        emailDetailsRecord.setTries(0);
+        EmailDetails record = emailRepository.save(emailMapper.mapToEntity(emailDetailsRecord));
+        log.info("new Email Details record added to database successfully");
+        return record;
+    }
+
+    @Override
+    public void updateEmailDetailsStatus(EmailDetails updatedEmailRecord) {
+        EmailDetails existingRecord = emailRepository.findById(updatedEmailRecord.getId()).orElse(null);
+        if(existingRecord == null){
+            log.info("record not found with id:" + updatedEmailRecord.getId());
+            return;
+        }
+        existingRecord.setStatus(updatedEmailRecord.getStatus());
+        existingRecord.setReceived_at(updatedEmailRecord.getReceived_at());
+        emailRepository.save(existingRecord);
+        log.info("Email Details record updated successfully");
     }
 }

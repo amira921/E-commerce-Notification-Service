@@ -15,13 +15,13 @@ Notification Service facilitates the communication between [Order Service](https
 - Schedule task to resend failed emails
 
 ## Email Sample
-<p align="center"><img src="Email Sample.jpg" width="500" length="600"></p>
+<p align="center"><img src="asset/Email Sample.jpg" width="500" length="600"></p>
 
 ## Json Message Format between Order Service and Notification Service
-<p align="center"><img src="order-information message.jpg" height="600" width="400"></p>
+<p align="center"><img src="asset/order-information message.jpg" height="600" width="400"></p>
 
 ## Notification Service ERD
-<p align="center"> <img src="notification service erd.png" width="400" height="400"> </p>
+<p align="center"> <img src="asset/notification service erd.png" width="400" height="400"> </p>
 
 ## Technologies Used
 - Spring Boot 3.1.5
