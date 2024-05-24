@@ -1,7 +1,7 @@
-# Notification Service
+# Notification Service:
 
 ## Overview
-This is a Spring Boot Service that is a part of an E-Commerce Website which is the final project at JobHacker Community Training.  
+This is a Spring Boot Service that is a part of [E-Commerce Website](https://github.com/amira921/e-commerce-website) which is the final project at JobHacker Community Training.  
 Notification Service facilitates the communication between [Order Service](https://github.com/omarsamir1999/E-commerce/tree/order-service/order-service) and customers by enabling the transmission of order-related information through email.
 
 ## Features
