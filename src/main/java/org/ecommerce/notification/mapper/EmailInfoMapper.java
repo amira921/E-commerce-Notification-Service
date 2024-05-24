@@ -5,7 +5,7 @@ import org.ecommerce.notification.entity.EmailInfo;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface EmailMapper {
+public interface EmailInfoMapper {
     EmailInfo mapToEntity(EmailInfoDTO dto);
     EmailInfoDTO mapToDTO(EmailInfo entity);
 }

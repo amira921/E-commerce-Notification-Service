@@ -3,7 +3,7 @@ package org.ecommerce.notification.asynchronous;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ecommerce.notification.dto.*;
-import org.ecommerce.notification.service.impl.EmailServiceImpl;
+import org.ecommerce.notification.service.NotificationService;
 import org.ecommerce.notification.util.dataFormatAdapterPattern.DataFormatAdapter;
 import org.springframework.scheduling.annotation.*;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.*;
 @AllArgsConstructor
 @Slf4j
 public class ScheduledEmailService{
-    private final EmailServiceImpl emailService;
+    private final NotificationService emailService;
     private final DataFormatAdapter emailFormatAdapter;
 
     @Async
@@ -28,7 +28,7 @@ public class ScheduledEmailService{
     }
 
     private List<EmailInfoDTO> getFailedEmails(){
-        return emailService.getFailedEmails();
+        return emailService.getFailedRecords();
     }
 
     private String convertToHTML(String emailInfo){
@@ -36,13 +36,13 @@ public class ScheduledEmailService{
     }
 
     private boolean resendEmail(String to, String content){
-        return emailService.sendEmail(to,content);
+        return emailService.sendNotification(to,content);
     }
 
     private void updateFailedEmailsInDB(EmailInfoDTO record, EmailStatus status){
         record.setTries(record.getTries() + 1);
         record.setStatus(status);
         if(status == EmailStatus.SUCCESS) record.setReceived_at(new Date());
-        emailService.updateEmailInfoStatus(record);
+        emailService.updateRecordInDB(record);
     }
 }

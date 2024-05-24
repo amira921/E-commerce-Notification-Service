@@ -56,10 +56,11 @@ Before you begin, ensure you have met the following requirements:
 7. Acccess RabbitMQ via `http://localhost:15672`
 8. Run the application: `mvn spring-boot:run`
 
-## Design Patterns Used
+## Design Patterns Applied
 - **Adapter** : DataFormatAdapter
    - RabbitMQ Message to Domain Object
    - Database Object to Html Content
 - **Proxy** : Logging & Exception
    - Implemented by AOP (AspectJ) 
-   
+
+## All 5 SOLID Principles Applied

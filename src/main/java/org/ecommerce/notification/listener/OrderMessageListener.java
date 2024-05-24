@@ -3,8 +3,8 @@ package org.ecommerce.notification.listener;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ecommerce.notification.dto.EmailInfoDTO;
-import org.ecommerce.notification.mapper.EmailMapper;
-import org.ecommerce.notification.service.impl.EmailServiceImpl;
+import org.ecommerce.notification.mapper.EmailInfoMapper;
+import org.ecommerce.notification.service.NotificationService;
 import org.ecommerce.notification.util.dataFormatAdapterPattern.DataFormatAdapter;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.core.MessageListener;
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class OrderMessageListener implements MessageListener {
     private final DataFormatAdapter emailFormatAdapter;
-    private final EmailServiceImpl service;
-    private final EmailMapper mapper;
+    private final NotificationService service;
+    private final EmailInfoMapper mapper;
 
     @Override
     public void onMessage(Message message) {
@@ -51,14 +51,14 @@ public class OrderMessageListener implements MessageListener {
     }
 
     private EmailInfoDTO saveIntoDB(EmailInfoDTO emailInfo){
-        return service.addEmailInfoToDB(emailInfo);
+        return (EmailInfoDTO) service.insertRecordInDB(emailInfo);
     }
 
     private EmailInfoDTO updateIntoDB(EmailInfoDTO emailInfo){
-        return service.updateEmailInfoStatus(emailInfo);
+        return (EmailInfoDTO) service.updateRecordInDB(emailInfo);
     }
 
     private boolean sendEmail(EmailInfoDTO emailInfo){
-        return service.sendEmail(emailInfo.getEmailTo(), emailInfo.getMessage().toString());
+        return service.sendNotification(emailInfo.getEmailTo(), emailInfo.getMessage().toString());
     }
 }
