@@ -34,6 +34,7 @@ Notification Service facilitates the communication between [Order Service](https
 - Thymeleaf 3.1.5
 - Java Mail Sender 3.1.5
 - MapStruct
+- AspectJ
 - Lombok
 - Spring Validation
 
@@ -50,7 +51,7 @@ Before you begin, ensure you have met the following requirements:
 2. Navigate to the project directory: `cd ./E-commerce-Notification-Service`
 3. Install dependencies: `mvn install`
 4. Update the `application.properties` file with your RabbitMQ, MYSQL, SMTP server details,Thymeleaf.
-5. Start Apache, MySQL, and Tomcat from Xampp
+5. Start Apache, MySQL, Docker Desktop, and Tomcat from Xampp
 6. Run RabbitMQ using CMD: `docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13.0-rc.2-management`
 7. Acccess RabbitMQ via `http://localhost:15672`
 8. Run the application: `mvn spring-boot:run`
@@ -59,5 +60,6 @@ Before you begin, ensure you have met the following requirements:
 - **Adapter** : DataFormatAdapter
    - RabbitMQ Message to Domain Object
    - Database Object to Html Content
-
+- **Proxy** : Logging & Exception
+   - Implemented by AOP (AspectJ) 
    
