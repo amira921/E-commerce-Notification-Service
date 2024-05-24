@@ -6,8 +6,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class EmailDetailsDTO {
+public class EmailInfoDTO {
     private Integer id;
     private String message;
     private String emailTo;

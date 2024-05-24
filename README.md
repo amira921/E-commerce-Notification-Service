@@ -54,3 +54,10 @@ Before you begin, ensure you have met the following requirements:
 6. Run RabbitMQ using CMD: `docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13.0-rc.2-management`
 7. Acccess RabbitMQ via `http://localhost:15672`
 8. Run the application: `mvn spring-boot:run`
+
+## Design Patterns Used
+- **Adapter** : DataFormatAdapter
+   - RabbitMQ Message to Domain Object
+   - Database Object to Html Content
+
+   

@@ -1,11 +1,11 @@
 package org.ecommerce.notification_service.mapper;
 
-import org.ecommerce.notification_service.dto.EmailDetailsDTO;
-import org.ecommerce.notification_service.entity.EmailDetails;
+import org.ecommerce.notification_service.dto.EmailInfoDTO;
+import org.ecommerce.notification_service.entity.EmailInfo;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface EmailMapper {
-    EmailDetails mapToEntity(EmailDetailsDTO dto);
-    EmailDetailsDTO mapToDTO(EmailDetails entity);
+    EmailInfo mapToEntity(EmailInfoDTO dto);
+    EmailInfoDTO mapToDTO(EmailInfo entity);
 }

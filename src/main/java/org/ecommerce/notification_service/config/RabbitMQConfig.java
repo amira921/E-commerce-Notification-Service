@@ -1,6 +1,6 @@
 package org.ecommerce.notification_service.config;
 
-import org.ecommerce.notification_service.consumer.RabbitMQConsumer;
+import org.ecommerce.notification_service.listener.OrderMessageListener;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.*;
@@ -17,12 +17,12 @@ public class RabbitMQConfig {
         return new Queue(queue);
     }
 
-    @Bean
-    public MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory, RabbitMQConsumer consumer) {
+   @Bean
+    public MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory, OrderMessageListener listener) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
         simpleMessageListenerContainer.setQueues(queue());
-        simpleMessageListenerContainer.setMessageListener(consumer);
+        simpleMessageListenerContainer.setMessageListener(listener);
         return simpleMessageListenerContainer;
     }
 }
