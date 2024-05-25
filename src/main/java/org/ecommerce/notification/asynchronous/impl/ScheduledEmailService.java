@@ -1,7 +1,8 @@
-package org.ecommerce.notification.asynchronous;
+package org.ecommerce.notification.asynchronous.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ecommerce.notification.asynchronous.ScheduledNotificationService;
 import org.ecommerce.notification.dto.*;
 import org.ecommerce.notification.service.NotificationService;
 import org.ecommerce.notification.util.dataFormatAdapterPattern.DataFormatAdapter;
@@ -12,22 +13,23 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ScheduledEmailService{
+public class ScheduledEmailService implements ScheduledNotificationService {
     private final NotificationService emailService;
     private final DataFormatAdapter emailFormatAdapter;
 
+    @Override
     @Async
     @Scheduled(cron = "0 0 0 * * *")
     public void resendFailedEmails() {
-        for(EmailInfoDTO info: getFailedEmails()){
+        for(NotificationDTO info: getFailedEmails()){
             String template = convertToHTML(info.getMessage());
-            boolean isSent = resendEmail(info.getEmailTo(),template);
-            if(isSent)updateFailedEmailsInDB(info,EmailStatus.SUCCESS);
-            else updateFailedEmailsInDB(info,EmailStatus.FAILED);
+            boolean isSent = resendEmail(info.getContact(),template);
+            if(isSent)updateFailedEmailsInDB(info, NotificationStatus.SUCCESS);
+            else updateFailedEmailsInDB(info, NotificationStatus.FAILED);
         }
     }
 
-    private List<EmailInfoDTO> getFailedEmails(){
+    private List<NotificationDTO> getFailedEmails(){
         return emailService.getFailedRecords();
     }
 
@@ -39,10 +41,10 @@ public class ScheduledEmailService{
         return emailService.sendNotification(to,content);
     }
 
-    private void updateFailedEmailsInDB(EmailInfoDTO record, EmailStatus status){
+    private void updateFailedEmailsInDB(NotificationDTO record, NotificationStatus status){
         record.setTries(record.getTries() + 1);
         record.setStatus(status);
-        if(status == EmailStatus.SUCCESS) record.setReceived_at(new Date());
+        if(status == NotificationStatus.SUCCESS) record.setReceived_at(new Date());
         emailService.updateRecordInDB(record);
     }
 }

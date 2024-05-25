@@ -15,12 +15,12 @@ public class EmailFormatAdaptee {
     private final JsonFormatAdaptee jsonFormatAdaptee;
     private final TemplateEngine templateEngine;
 
-    public EmailInfoDTO convertToDomainObject(Message orderMessage){
+    public NotificationDTO convertToDomainObject(Message orderMessage){
         JsonNode node = jsonFormatAdaptee.convertToJson(orderMessage);
-        EmailInfoDTO emailInfoDTO = new EmailInfoDTO();
-        emailInfoDTO.setMessage(node.toString());
-        emailInfoDTO.setEmailTo(node.get("customer").get("email").asText());
-        return emailInfoDTO;
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setMessage(node.toString());
+        notificationDTO.setContact(node.get("customer").get("email").asText());
+        return notificationDTO;
     }
 
     public String convertToHtmlContent(String emailContent){

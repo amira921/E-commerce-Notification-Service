@@ -1,5 +1,5 @@
 package org.ecommerce.notification.dto;
 
-public enum EmailStatus {
+public enum NotificationStatus {
     SUCCESS,FAILED;
 }

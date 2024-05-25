@@ -6,12 +6,12 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailInfoDTO {
+public class NotificationDTO {
     private Integer id;
     private String message;
-    private String emailTo;
+    private String contact;
     private int tries;
     private Date created_at;
     private Date received_at;
-    private EmailStatus status;
+    private NotificationStatus status;
 }

@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LogAndHandleAspect {
     @Around("execution(* org.ecommerce.notification.listener.OrderMessageListener.onMessage(..)) || " +
-            "execution(* org.ecommerce.notification.service.EmailService.*(..)) || " +
-            "execution(* org.ecommerce.notification.asynchronous.ScheduledEmailService.resendFailedEmails(..)) || " +
-            "execution(* org.ecommerce.notification.util.dataFormatAdapterPattern.EmailFormatAdapter.*(..))")
+            "execution(* org.ecommerce.notification.service.NotificationService.*(..)) || " +
+            "execution(* org.ecommerce.notification.asynchronous.ScheduledNotificationService.*(..)) || " +
+            "execution(* org.ecommerce.notification.util.dataFormatAdapterPattern.DataFormatAdapter.*(..))")
     public Object logMessageProcessing(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         log.info("Calling method: " + joinPoint.getSignature().getName() + " in " + joinPoint.getTarget());
